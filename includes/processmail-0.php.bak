@@ -1,0 +1,30 @@
+<?php 
+$suspect = false;
+$pattern = '/Content-Type:|Bcc:|Cc:/i';
+// function to check for suspect phrases
+function isSuspect($val, $pattern, &$suspect){
+	//if variaable is an array loop though each element
+	//and pass it recursively back to the same function
+	if(is_array($val)){
+		foreach ($val as $item) {
+			isSuspect($item, $pattern, $suspect);
+		}
+	} else {
+		//if one suspect phrase was found
+		if(preg_match($pattern, $val)) {
+			$suspect = true;
+		}
+	}
+}
+
+if (!$suspect){
+foreach ($_POST as $key => $value) {
+	$temp = is_array($value) ? $value : trim($value);
+	if (empty($temp) && in_array($key, $required)) {
+		$missing[] = $key;
+		${$key} = '';
+	} elseif (in_array($key, $expected)){
+		${$key} = $temp;
+	}
+}
+}
